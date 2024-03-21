@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: todolist_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: always
+    networks:
+      - my-app-network
+
+  nodejs-backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/usr/src/ # Maps the local backend directory to the backend service container
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      - my-app-network
+
+  # nextjs-frontend:
+  #   build:
+  #     context: ./frontend
+  #   volumes:
+  #     - ./frontend:/usr/src/app # Maps the local frontend directory to the frontend service container
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - nodejs-backend
+  #   restart: always
+  #   networks:
+  #     - my-app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  my-app-network: # This defines the custom network
+    driver: bridge
