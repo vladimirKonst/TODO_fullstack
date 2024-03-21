@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/App.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,6 +14,10 @@
     "cors": "^2.8.5",
     "express": "^4.18.3",
     "mysql": "^2.18.1",
-    "mysql2": "^3.9.2"
+    "mysql2": "^3.9.2",
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30"
   }
 }
