@@ -19,10 +19,17 @@ services:
   nodejs-backend:
     build:
       context: ./backend
+      dockerfile: Dockerfile
+      args:
+        PORT: ${PORT}
+        DB_HOST: ${DB_HOST}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_NAME: ${DB_NAME}
     volumes:
       - ./backend:/usr/src/ # Maps the local backend directory to the backend service container
     ports:
-      - "3001:3001"
+      - "${PORT}:3001"
     depends_on:
       - mysql
     restart: always
