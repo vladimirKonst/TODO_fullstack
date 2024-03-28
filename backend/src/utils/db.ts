@@ -1,7 +1,7 @@
 const pool = require('../config/database.ts');
 
-exports.queryDatabase = (sql, callback) => {
-  pool.query(sql, (error, results, fields) => {
+exports.queryDatabase = function(query, params, callback) {
+  pool.execute(query, params, (error, results, fields) => {
     callback(error, results);
   });
 };

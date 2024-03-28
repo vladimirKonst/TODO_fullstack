@@ -1,7 +1,5 @@
 require('dotenv').config({path: "../../.env"});
 
-console.log(process.env)
-
 const express = require('express');
 const cors = require('cors');
 const todoRoutes = require('./routes/todoRoutes.ts');

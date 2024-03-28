@@ -10,27 +10,71 @@ import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Delete from "@mui/icons-material/Delete";
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { type ITodo } from "../pages/todos"
 
-export const TodoItem = ({id, title, description} : { id: number, title: string, description: string}) => {
-    const [completed, setCompleted] = useState(false);
+interface ITodoItemsProps extends ITodo {}
+
+export const TodoItem = ({id, title, description, completed, due_date} : ITodoItemsProps) => {
+    
+    const router = useRouter();
     const [open, setOpen] = useState(false);
 
-    const checkboxHandler = (e: MouseEvent) => {
+    const checkboxHandler = async (e: MouseEvent) => {
         e.stopPropagation();
-        setCompleted(!completed)
+        updateTodo(Number((e.target as HTMLInputElement).checked))
+        router.push("/todos")
     }
 
-    const deleteTaskHandler = (e: MouseEvent) => {
+    const deleteTaskHandler = async (e: MouseEvent) => {
         e.stopPropagation();
-        alert(`Delete task id: ${id}`)
+        try {
+            const response = await fetch(`http://localhost:3001/todos/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Error deleting todo');
+            }
+    
+            const data = await response.json();
+            router.push("/todos");
+            console.log('Delete successful:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const updateTodo = async (completed: number) => {
+        try {
+            const response = await fetch(`http://localhost:3001/todos/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({id, title, description, completed}),
+            });
+        
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        
+            const data = await response.json();
+            console.log('Update successful:', data);
+        } catch (error) {
+            console.error('Error updating todo:', error);
+        }
     }
 
     return <div key={id}>
         <ListItemButton onClick={() => setOpen(!open)}>
-        <Checkbox checked={completed} onClick={checkboxHandler} />
+        <Checkbox checked={Boolean(completed)} onClick={checkboxHandler} />
         <ListItemText className={clsx({"line-through": completed})} primary={title}/>
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <ExpandLess /> : <ExpandMore />} 
         <ListItemButton className='max-w-10 p-2' onClick={deleteTaskHandler}>
             <ListItemIcon>
                 <Delete />

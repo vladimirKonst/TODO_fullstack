@@ -1,15 +1,18 @@
 import React from 'react';
 import { TodoWrapper } from "@/components/TodoWrapper";
+import { wrapper } from "../store/index"
+import { fetchTodos } from "../store/slices/todos/todoSlice";
 
-interface Todo {
+export interface ITodo {
   id: number;
   title: string;
   description: string;
   completed: boolean;
+  due_date: `${number}-${number}-${number}`
 }
 
-interface TodosProps {
-  todos: Todo[]; // Adjust according to the actual structure of your data
+export interface TodosProps {
+  todos: ITodo[]; // Adjust according to the actual structure of your data
 }
 
 const Todos: React.FC<TodosProps> = ({ todos }) => {
@@ -20,21 +23,13 @@ const Todos: React.FC<TodosProps> = ({ todos }) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  let todos = []; // Initialize as an array to match the expected structure
-  try {
-    const res = await fetch('http://localhost:3001/todos');
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    todos = await res.json(); // Use .json() if your API returns JSON data
-  } catch (error) {
-    console.error('Fetch error:', error);
-  }
+export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
+  await store.dispatch(fetchTodos())
+  console.log("UPDATED STATE ON SERVER SIDE", store.getState());
 
   return {
-    props: { todos }, // Pass the fetched todos as props
+    props: { todos: [] }, // No need to pass todos as props, as they're already in your Redux state
   };
-};
+});
 
 export default Todos;
