@@ -18,7 +18,7 @@ First, you need to build and run the Docker containers which include all the nec
 
     cp .env.example .env & docker-compose up
 
-since you already have .env file in your root deirectory, then just run comnmand:
+if you already have .env file in your root deirectory, then just run comnmand:
 
     docker-compose up
 
