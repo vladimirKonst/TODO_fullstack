@@ -16,6 +16,10 @@ Before you begin, ensure you have Docker installed on your system. If you do not
 
 First, you need to build and run the Docker containers which include all the necessary environments for the application. Open a terminal and navigate to the root directory of this project. Then, execute the following command: 
 
+    cp .env.example .env & docker-compose up
+
+since you already have .env file in your root deirectory, then just run comnmand:
+
     docker-compose up
 
 This command builds, (re)creates, starts, and attaches to containers for a service. Wait for the process to complete before moving to the next step.

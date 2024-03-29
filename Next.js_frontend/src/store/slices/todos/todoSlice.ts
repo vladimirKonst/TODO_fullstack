@@ -3,14 +3,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
-    const response = await fetch('http://localhost:3001/todos');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const todos = await response.json();
+  const response = await fetch('http://localhost:3001/todos');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const todos = await response.json();
 
-    return todos;
-  });
+  return todos;
+});
 
 const initialState = {
   todos: [] as any[],

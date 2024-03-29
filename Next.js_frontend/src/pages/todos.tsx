@@ -24,11 +24,13 @@ const Todos: React.FC<TodosProps> = ({ todos }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
-  await store.dispatch(fetchTodos())
-  console.log("UPDATED STATE ON SERVER SIDE", store.getState());
+  const fetchedTodos = await fetchTodos()
+  await store.dispatch(fetchedTodos)
+  const data = (store.getState() as any).todos.todos;
+  console.log("UPDATED STATE ON SERVER SIDE", data);
 
   return {
-    props: { todos: [] }, // No need to pass todos as props, as they're already in your Redux state
+    props: { todos: data }, // почему то я не смог норм гидрировать стейт, а возможно это вообще плохая идея, надо подумать почитать
   };
 });
 
